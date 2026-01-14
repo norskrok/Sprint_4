@@ -5,11 +5,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import page.MainPage;
+import page.OrderForm;
 
 public class BaseTest {
 
     protected WebDriver driver;
     MainPage mainPage;
+    OrderForm orderForm;
 
     @Before
     public void start() {
@@ -25,7 +27,7 @@ public class BaseTest {
         }
 
         mainPage = new MainPage(driver);
-
+        orderForm = new OrderForm(driver);
 
         driver.get("https://qa-scooter.praktikum-services.ru/");
         driver.findElement(By.className("App_CookieButton__3cvqF")).click();
