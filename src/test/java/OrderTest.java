@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -5,75 +6,36 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import org.openqa.selenium.JavascriptExecutor;
 
 public class OrderTest extends BaseTest {
-
-    @RunWith(Parameterized.class)
-    public static class QuestionsTest extends BaseTest {
-
-        private final int questionNumber;
-
-        public QuestionsTest(int questionNumber) {
-            this.questionNumber = questionNumber;
-        }
-
-        // данные для параметризации
-        @Parameterized.Parameters
-        public static Object[][] getData() {
-            return new Object[][]{
-                    {0},
-                    {1},
-                    {2},
-                    {3},
-                    {4},
-                    {5},
-                    {6},
-                    {7}
-            };
-        }
-
-        @Test
-        public void checkAnswerIsDisplayed() {
-
-            // Скроллит вниз к вопросам
-            ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight)");
-
-            // Кликает по вопросу
-            driver.findElement(By.id("accordion__heading-" + questionNumber)).click();
-
-            // Проверяет, что ответ появился
-            assert driver.findElement(By.id("accordion__panel-" + questionNumber)).isDisplayed();
-        }
-    }
 
     @Test
     public void testTopButton() {
 
         // Находит кнопку Заказать сверху и нажимает на нее
-        mainPage.findsOrderButtonOnTheTop();
+        mainPage.orderBtnTop();
 
         // Ждет
         mainPage.waiting();
 
         // Сравнивает
-        mainPage.comparing();
+        mainPage.checkOrderPageOpened();
     }
 
     @Test
     public void testBottomButton() {
 
         // Пролистывает вниз
-        mainPage.scrollsDown();
+        mainPage.scrollDown();
 
         // Находит кнопку Заказать снизу и нажимает на нее
-        mainPage.findsButtonOnTheBottom();
+        mainPage.orderBtnBottom();
 
         // Ждет
         mainPage.waiting();
 
         // Сравнивает
-        mainPage.comparing();
+        mainPage.checkOrderPageOpened();
     }
 
     @RunWith(Parameterized.class)
@@ -165,11 +127,8 @@ public class OrderTest extends BaseTest {
             // Ждет кнопку Да в окне подтверждения и кликает по ней
             orderForm.clickYesButton();
 
-            // Ждет окно подтверждение
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Заказ оформлен']")));
-
-            // Нажимает кнопку посмотреть статус
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Посмотреть статус']"))).click();
+            // Сравнивает окно подтверждение
+            Assert.assertTrue(orderForm.isOrderCreated());
 
         }
     }

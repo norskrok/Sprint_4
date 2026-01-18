@@ -18,16 +18,15 @@ public class OrderForm {
     private By metroStationField = By.xpath("//input[@placeholder='* Станция метро']");
     private By phoneNumberField = By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']");
     private By nextBtn = By.xpath("//button[text()='Далее']");
-
+    // 2 страница
     private By chooseDateField = By.xpath("//input[@placeholder='* Когда привезти самокат']");
     private By yesBtn = By.xpath("//button[text()='Да']");
     private By orderBtn1 = By.xpath("(//button[contains(.,'Заказать')])[1]");
-
-
+    private final By orderCreatedTitle = By.xpath("//div[text()='Заказ оформлен']");
+    
     public OrderForm(WebDriver driver) {
         this.driver = driver;
     }
-
 
     // 1 страница
     public void writeName(String name) {
@@ -64,9 +63,7 @@ public class OrderForm {
     }
 
     public void clickYesButton() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(yesBtn))
-                .click();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(yesBtn)).click();
     }
 
     public void chooseColor(WebDriverWait wait, String color) {
@@ -77,5 +74,10 @@ public class OrderForm {
 
     public void clickOrderButton() {
         driver.findElement(orderBtn1).click();
+    }
+
+    public boolean isOrderCreated() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(orderCreatedTitle)).isDisplayed();
     }
 }
