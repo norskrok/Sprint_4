@@ -2,10 +2,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 
 public class OrderTest extends BaseTest {
 
@@ -67,23 +63,16 @@ public class OrderTest extends BaseTest {
         @Parameterized.Parameters
         public static Object[][] getData() {
             return new Object[][]{
-                    {"Иван", "Иванов", "Пушкина 5", "Белорусская", "+77777777777",
-                            "03.01.2026", "сутки", "черный жемчуг"},
-                    {"Степан", "Степанов", "Лермонтова 5", "Аэропорт", "+76666666666",
-                            "20.01.2026", "двое суток", "серая безысходность"}
+                    {"Иван", "Иванов", "Пушкина 5", "Белорусская", "+77777777777", "03.01.2026", "сутки", "черный жемчуг"},
+                    {"Степан", "Степанов", "Лермонтова 5", "Аэропорт", "+76666666666", "20.01.2026", "двое суток", "серая безысходность"}
             };
         }
 
         @Test
         public void testFullRegistration() {
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-            // Нажимает кнопку Заказать
+            // Нажимает на кнопку Закзать
             orderForm.clickOrderButton();
-
-            // Ожидает перехода на страницу заказа
-            wait.until(ExpectedConditions.urlContains("/order"));
 
             // Вводит имя
             orderForm.writeName(name);
@@ -97,39 +86,30 @@ public class OrderTest extends BaseTest {
             // Вводит название станции метро
             orderForm.writeMetroStation(metroStation);
 
-            // Выбирает станцию метро
-            orderForm.chooseMetroStation(wait, metroStation);
-
             // Вводит номер телефона
             orderForm.writePhoneNumber(phoneNumber);
 
             // Нажимает кнопку Далее
             orderForm.clickNextButton();
 
-            // Ждет следующую страницу
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Про аренду']")));
-
-            // Вводит и нажимает дату
+            // Выбирает дату
             orderForm.chooseDate(date);
 
-            // Открываем дропдаун срока аренды
-            wait.until(ExpectedConditions.elementToBeClickable(By.className("Dropdown-placeholder"))).click();
-
-            // Выбирает срок аренды
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'Dropdown-option') and text()='" + period + "']"))).click();
+            // Выбирает период
+            orderForm.choosePeriod(period);
 
             // Выбирает цвет
-            orderForm.chooseColor(wait, color);
+            orderForm.chooseColor(color);
 
             // Нажимает кнопку Заказать
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("(//button[text()='Заказать'])[2]"))).click();
+            orderForm.clickOrderButtonSecond();
 
-            // Ждет кнопку Да в окне подтверждения и кликает по ней
+            // Нажимает кнопку Да
             orderForm.clickYesButton();
 
-            // Сравнивает окно подтверждение
+            // Проверка
             Assert.assertTrue(orderForm.isOrderCreated());
-
         }
+
     }
 }

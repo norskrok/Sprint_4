@@ -37,4 +37,3 @@ public class FaqTest extends BaseTest {
         Assert.assertEquals(expectedAnswer, actual);
     }
 }
-git rm -r --cached target
